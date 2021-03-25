@@ -67,6 +67,18 @@ func (c *client) GetDeletedUsers() ([]*admin.User, error) {
 		u = append(u, users.Users...)
 		return nil
 	})
+	if err != nil {
+		return nil, err
+	}
+
+	err = c.service.Users.List().Customer("my_customer").Pages(c.ctx, func(users *admin.Users) error {
+		for _, uu := range users.Users {
+			if uu.Suspended {
+				u = append(u, uu)
+			}
+		}
+		return nil
+	})
 
 	return u, err
 }
@@ -75,7 +87,11 @@ func (c *client) GetDeletedUsers() ([]*admin.User, error) {
 func (c *client) GetUsers() ([]*admin.User, error) {
 	u := make([]*admin.User, 0)
 	err := c.service.Users.List().Customer("my_customer").Pages(c.ctx, func(users *admin.Users) error {
-		u = append(u, users.Users...)
+		for _, uu := range users.Users {
+			if !uu.Suspended {
+				u = append(u, uu)
+			}
+		}
 		return nil
 	})
 
