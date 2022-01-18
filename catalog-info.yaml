@@ -1,0 +1,10 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: ssosync
+  annotations:
+    github.com/project-slug: Jimdo/ssosync
+spec:
+  type: other
+  lifecycle: unknown
+  owner: sre
